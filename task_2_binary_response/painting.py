@@ -3,7 +3,8 @@ from l_system import LSystem, Turtle
 def get_image(step=4, 
   axiom='F-G-G', 
   rule_F='F-G+F+G-F', 
-  rule_G='GG')
+  rule_G='GG'
+ )
 
 l_system = LSystem(
         variables='FG',
