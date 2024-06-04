@@ -28,6 +28,9 @@ Connection: Closed
 {body}"""
 
 
+def hello_fun(name):
+    return (f"Hello, {name}!")
+
 def get_request(conn: socket.socket) -> str:
     data = b""
     while True:
@@ -49,18 +52,27 @@ try:
             type_request, urn, _ = request_data.split("\r\n")[0].split(" ")
             print(type_request, urn)
 
-            try:
-                with open(urn.lstrip("//")) as file:
-                    response_body = file.read()
-
+            if urn.startswith("/hello/"):
+                name = urn.split("/")[2]
+                response_body = hello(name)
                 response = response_ok.format(
                     date=datetime.now(),
                     length=len(response_body.encode()),
                     body=response_body,
-                )
+                 )
+            else:
+                try:
+                    with open(urn.lstrip("//")) as file:
+                        response_body = file.read()
+    
+                    response = response_ok.format(
+                        date=datetime.now(),
+                        length=len(response_body.encode()),
+                        body=response_body,
+                 )
             except:
                 response = response_404
-            conn.sendall(response.encode())
+        conn.sendall(response.encode())
 
 except KeyboardInterrupt:
     socket_server.close()
